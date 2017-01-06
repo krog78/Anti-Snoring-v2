@@ -35,6 +35,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"/>
+            </intent-filter>
         </activity>
 
         <!-- AIRPUSH -->
@@ -43,13 +49,11 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity
-            android:name="com.qxxmucxymh.hathpsneoi122008.AdActivity"
+        <activity android:exported="false" android:name="com.qxxmucxymh.hathpsneoi122008.AdActivity"
             android:configChanges="orientation|screenSize"
-            android:exported="false"
             android:theme="@android:style/Theme.Translucent" />
-        <activity
-            android:name="com.qxxmucxymh.hathpsneoi122008.BrowserActivity"
+
+        <activity android:name="com.qxxmucxymh.hathpsneoi122008.BrowserActivity"
             android:configChanges="orientation|screenSize" />
 
         <!-- END AIRPUSH -->

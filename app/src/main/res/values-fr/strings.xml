@@ -15,6 +15,7 @@
         <item>OTHER</item>
     </string-array>
     <string name="changer_son">Changer le son</string>
+    <string name="quitter">Quitter</string>
     <string name="reglage_sensibilite">Réglage de la sensibilité</string>
     <string name="select_audio">Selectionnez un fichier audio</string>   
     <string name="vibrate">Vibreur</string>

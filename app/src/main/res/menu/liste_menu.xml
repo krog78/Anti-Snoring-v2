@@ -13,5 +13,11 @@
         android:title="@string/changer_son"
         />
 
+    <item
+        android:id="@+id/quitter"
+        android:icon="@drawable/notes"
+        android:title="@string/quitter"
+        />
+
 
 </menu>

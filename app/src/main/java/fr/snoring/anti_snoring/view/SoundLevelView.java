@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -25,8 +26,8 @@ public class SoundLevelView extends View {
 	public SoundLevelView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
-		mGreen = context.getResources().getDrawable(R.drawable.greenbar);
-		mRed = context.getResources().getDrawable(R.drawable.redbar);
+		mGreen = ContextCompat.getDrawable(context, R.drawable.greenbar);
+		mRed = ContextCompat.getDrawable(context, R.drawable.redbar);
 		mHeight = mGreen.getIntrinsicHeight();
 		setMinimumHeight(mHeight);
 		mWidth = mGreen.getIntrinsicWidth();
