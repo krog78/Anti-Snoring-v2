@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/sensibilite"
+        android:icon="@drawable/sensibilite"
+        android:title="@string/sensibilite"
+        />
+       
+    <item
+        android:id="@+id/changer_son"
+        android:icon="@drawable/notes"
+        android:title="@string/changer_son"
+        />
+
+
+</menu>

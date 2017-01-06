@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello anti-snoring!</string>
+    <string name="app_name">Anti-snoring</string>
+    <string name="sensibilite">Sensibilité micro</string>
+    <string name="choix_son">Choisissez un son</string>
+    <string-array name="sons_liste">
+        <item>Cochon</item>
+        <item>Eléphant</item>    
+        <item>Choisir un autre son&#8230;</item>  
+    </string-array>
+    <string-array name="sons_fichier">
+        <item>@raw/pig</item>
+        <item>@raw/elephant</item>
+        <item>OTHER</item>
+    </string-array>
+    <string name="changer_son">Changer le son</string>
+    <string name="reglage_sensibilite">Réglage de la sensibilité</string>
+    <string name="select_audio">Selectionnez un fichier audio</string>   
+    <string name="vibrate">Vibreur</string>
+</resources>
