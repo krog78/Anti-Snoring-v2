@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("anti_snoring.snoring.fr.anti_snoring", appContext.getPackageName());
+        assertEquals("fr.snoring.anti_snoring", appContext.getPackageName());
     }
 }

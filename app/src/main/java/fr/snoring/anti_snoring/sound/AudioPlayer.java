@@ -22,20 +22,14 @@ public class AudioPlayer {
 			// Gets the real path on the storage
 			Uri realStoragePath = Uri.parse(FileUtils.getPath(ctx, Uri.parse(urlFichierSon)));
 			mp.setDataSource(ctx, realStoragePath);
-		} catch (IllegalArgumentException e) {
-			throw new RuntimeException(e);
-		} catch (SecurityException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalStateException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
+		} catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
 			throw new RuntimeException(e);
 		}
 		mp.prepareAsync();
 
 	}
 
-	public void create(Context ctx, int resid) {
+	private void create(Context ctx, int resid) {
 		mp = new MediaPlayer();
 		mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		AssetFileDescriptor afd = ctx.getResources().openRawResourceFd(resid);
@@ -43,11 +37,7 @@ public class AudioPlayer {
 			return;
 		try {
 			mp.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-		} catch (IllegalArgumentException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalStateException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
+		} catch (IllegalArgumentException | IllegalStateException | IOException e) {
 			throw new RuntimeException(e);
 		}
 		mp.prepareAsync();
@@ -73,29 +63,15 @@ public class AudioPlayer {
 			mp.pause();
 	}
 
-	public void restart() {
-		if (mp != null)
-			mp.start();
-	}
-
-	public void stop() {
-		if (mp != null)
-			mp.stop();
-	}
-
 	public void release() {
 		if (mp != null) {
 			mp.release();
 		}
 	}
 
-	public void setVolume(float value) {
-		mp.setVolume(value, value);
-	}
-
 	public void init(SoundFile soundFile, Context ctx) {
-		// Cr�ation et initialisation de l'audioplayer
-		if (!soundFile.isAResource()) { // Une pr�f�rence de fichier
+		// Creation et initialisation de l'audioplayer
+		if (!soundFile.isAResource()) { // Une preference de fichier
 										// externe existe
 			create(ctx, soundFile.getUrl());
 		} else { // Internal sound used

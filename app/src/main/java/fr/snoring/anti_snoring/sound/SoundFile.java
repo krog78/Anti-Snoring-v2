@@ -47,10 +47,8 @@ public class SoundFile {
 		return url;
 	}
 
-	public final boolean isAResource() {
-		if (getResourceId() == ID_IS_NOT_A_RESOURCE) {
-			return false;
-		}
-		return true;
+	final boolean isAResource() {
+		return !(getResourceId() == ID_IS_NOT_A_RESOURCE);
+
 	}
 }

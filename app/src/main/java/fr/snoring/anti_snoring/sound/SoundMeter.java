@@ -39,15 +39,13 @@ public class SoundMeter {
 				mRecorder.prepare();
 				mRecorder.start();
 				started = true;
-			} catch (IllegalStateException e) {
-				throw new RuntimeException(e);
-			} catch (IOException e) {
+			} catch (IllegalStateException | IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
 	}
 
-	public void stop() {
+	private void stop() {
 		if (started) {
 			mRecorder.stop();
 			mRecorder.reset();
