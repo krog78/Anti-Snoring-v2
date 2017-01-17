@@ -97,6 +97,8 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
 		int requestCode = 200;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			requestPermissions(permissions, requestCode);
+		}else{
+			initPollTask();
 		}
 
 		menuInflater = getMenuInflater();
@@ -113,6 +115,15 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
 		// ATTENTION: This was auto-generated to implement the App Indexing API.
 		// See https://g.co/AppIndexing/AndroidStudio for more information.
 		client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+	}
+
+	private void initPollTask(){
+		// Init Poll Task
+		try {
+			pollTask = new PollTask(this, soundPreference.getCurrentSound());
+		} catch (IllegalStateException | IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
@@ -132,7 +143,9 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
 				dialog.setContentView(R.layout.layout_seekbar);
 				dialog.setTitle(R.string.reglage_sensibilite);
 				SeekBar seek = (SeekBar) dialog.findViewById(R.id.seekbar);
-				seek.setProgress(pollTask.getmThreshold() * 10);
+				if(pollTask != null) {
+                    seek.setProgress(pollTask.getmThreshold() * 10);
+                }
 				seek.setOnSeekBarChangeListener(this);
 
 				dialog.show();
@@ -156,9 +169,10 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
 						} else { // Internal file selected
 							SoundFile selectedSound = soundPreference.getDefaultSounds().get(item);
 							soundPreference.savePreference(AntiSnoringActivity.this, selectedSound);
-
-							pollTask.getAudioPlayer().changerSon(AntiSnoringActivity.this,
-									sonsFichier.getResourceId(item, 0));
+							if(pollTask != null) {
+								pollTask.getAudioPlayer().changerSon(AntiSnoringActivity.this,
+										sonsFichier.getResourceId(item, 0));
+							}
 							dialog.dismiss();
 						}
 						sonsFichier.recycle();
@@ -168,6 +182,9 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
 				AlertDialog alert = builder.create();
 				alert.show();
 				return true;
+            case R.id.quitter:
+                AntiSnoringActivity.super.finish();
+                return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -176,7 +193,9 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		pollTask.release();
+		if(pollTask != null) {
+            pollTask.release();
+        }
 	}
 
 	@Override
@@ -189,12 +208,16 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
 			super.onBackPressed();
 		}
 		super.onBackPressed();
-		pollTask.release();
+        if(pollTask != null) {
+            pollTask.release();
+        }
 	}
 
 	@Override
 	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-		pollTask.changeThreshold(this, arg1);
+        if(pollTask != null) {
+            pollTask.changeThreshold(this, arg1);
+        }
 	}
 
 	@Override
@@ -220,8 +243,10 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
 					String fileName = FileUtils.getFilename(this, uri);
 					String prefSon = uri.toString();
 					soundPreference.savePreference(AntiSnoringActivity.this, new SoundFile(fileName, -1, prefSon));
-					pollTask.getAudioPlayer().release();
-					pollTask.getAudioPlayer().create(this, uri.toString());
+                    if(pollTask != null) {
+                        pollTask.getAudioPlayer().release();
+                        pollTask.getAudioPlayer().create(this, uri.toString());
+                    }
 				}
 
 		}
@@ -313,12 +338,6 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
 		}
 		if (!permissionToRecordAccepted ) AntiSnoringActivity.super.finish();
 		if (!permissionToWriteAccepted ) AntiSnoringActivity.super.finish();
-
-		// Init Poll Task
-		try {
-			pollTask = new PollTask(this, soundPreference.getCurrentSound());
-		} catch (IllegalStateException | IOException e) {
-			throw new RuntimeException(e);
-		}
+        initPollTask();
 	}
 }
