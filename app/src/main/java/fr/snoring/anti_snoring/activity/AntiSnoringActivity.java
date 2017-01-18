@@ -102,15 +102,7 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
 		}
 
 		menuInflater = getMenuInflater();
-		soundPreference = new SoundPreference(AntiSnoringActivity.this);
-
-		// Load the default sounds
-		soundPreference.loadDefaultSounds(getResources());
-
-		soundPreference.updateSoundText(this);
-
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
 
 		// ATTENTION: This was auto-generated to implement the App Indexing API.
 		// See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -118,6 +110,14 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
 	}
 
 	private void initPollTask(){
+
+		soundPreference = new SoundPreference(AntiSnoringActivity.this);
+
+		// Load the default sounds
+		soundPreference.loadDefaultSounds(getResources());
+
+		soundPreference.updateSoundText(this);
+
 		// Init Poll Task
 		try {
 			pollTask = new PollTask(this, soundPreference.getCurrentSound());
