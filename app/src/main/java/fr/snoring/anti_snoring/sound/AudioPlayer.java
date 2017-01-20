@@ -15,6 +15,12 @@ public class AudioPlayer {
 
 	private MediaPlayer mp;
 
+	private State t;
+
+	private enum State {
+		INITIALIZED, STARTED, PAUSED, RELEASED
+	}
+
 	public void create(Context ctx, String urlFichierSon) {
 		mp = new MediaPlayer();
 		mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -26,7 +32,7 @@ public class AudioPlayer {
 			throw new RuntimeException(e);
 		}
 		mp.prepareAsync();
-
+		t = State.INITIALIZED;
 	}
 
 	private void create(Context ctx, int resid) {
@@ -46,6 +52,7 @@ public class AudioPlayer {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+		t = State.INITIALIZED;
 	}
 
 	public void changerSon(Activity activity, int resid) {
@@ -55,18 +62,21 @@ public class AudioPlayer {
 
 	public void play() {
 		mp.start();
-
+		t = State.STARTED;
 	}
 
 	public void pause() {
-		if (mp != null && mp.isPlaying())
+		if (t == State.STARTED) {
 			mp.pause();
+		}
+		t = State.PAUSED;
 	}
 
 	public void release() {
 		if (mp != null) {
 			mp.release();
 		}
+		t = State.RELEASED;
 	}
 
 	public void init(SoundFile soundFile, Context ctx) {

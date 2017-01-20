@@ -178,19 +178,19 @@ public class PollTask {
     }
 
     private void startAudioPlayer() {
-        Runnable audioRun = new Runnable() {
+        final Handler handler = new Handler();
+        handler.post(new Runnable() {
             @Override
             public void run() {
                 audioPlayer.play();
-                try {
-                    Thread.sleep(5000);
-                    audioPlayer.pause();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-
             }
-        };
-        audioRun.run();
+        });
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                audioPlayer.pause();
+            }
+        }, 5000);
     }
 }

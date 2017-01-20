@@ -29,8 +29,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|top"
-        android:text="test"
-        android:textSize="25dp"
+        android:text=""
+        android:textSize="25sp"
         android:textStyle="bold"
         android:gravity="center" />
     
@@ -38,5 +38,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/img_vibrate"
         android:contentDescription="@string/vibrate"/>
+
+    <com.qxxmucxymh.hathpsneoi122008.AdView
+        android:id="@+id/myAdView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
 
 </TableLayout>
