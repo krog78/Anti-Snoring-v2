@@ -6,7 +6,7 @@
     android:background="@drawable/moon"
     android:orientation="vertical" 
     android:padding="10dp"
-    >
+    android:weightSum="1">
     
     <fr.snoring.anti_snoring.view.SoundLevelView
         android:id="@+id/volume"
@@ -14,15 +14,6 @@
         android:layout_height="43sp"
         android:layout_gravity="center_horizontal|top"
          />
-
-    <ImageView
-        android:id="@+id/sleeping"
-        android:layout_width="147dp"
-        android:layout_height="147dp"
-        android:layout_gravity="center_horizontal|top"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/sleeping"
-        android:visibility="visible" />
 
     <TextView
         android:id="@+id/son_selectionne"
@@ -39,10 +30,15 @@
         android:id="@+id/img_vibrate"
         android:contentDescription="@string/vibrate"/>
 
-    <com.qxxmucxymh.hathpsneoi122008.AdView
-        android:id="@+id/myAdView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+    <ImageView
+        android:id="@+id/sleeping"
+        android:layout_width="147dp"
+        android:layout_height="147dp"
+        android:layout_gravity="center_horizontal|top"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/sleeping"
+        android:visibility="visible"
+        android:layout_weight="0.08"
+        android:adjustViewBounds="false" />
 
 </TableLayout>

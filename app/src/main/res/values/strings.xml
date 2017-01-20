@@ -5,11 +5,15 @@
     <string name="sensibilite">Microphone sensitivity</string>
     <string name="choix_son">Choose a sound</string>
     <string-array name="sons_liste">
+        <item>Rooster</item>
+        <item>Phone</item>
         <item>Pig</item>
         <item>Elephant</item> 
         <item>Choose another sound&#8230;</item>     
     </string-array>
     <string-array name="sons_fichier">
+        <item>@raw/rooster</item>
+        <item>@raw/phone</item>
         <item>@raw/pig</item>
         <item>@raw/elephant</item>
         <item>OTHER</item>

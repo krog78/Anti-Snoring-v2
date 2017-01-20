@@ -5,11 +5,15 @@
     <string name="sensibilite">Sensibilité micro</string>
     <string name="choix_son">Choisissez un son</string>
     <string-array name="sons_liste">
+        <item>Coq</item>
+        <item>Téléphone</item>
         <item>Cochon</item>
         <item>Eléphant</item>    
         <item>Choisir un autre son&#8230;</item>  
     </string-array>
     <string-array name="sons_fichier">
+        <item>@raw/rooster</item>
+        <item>@raw/phone</item>
         <item>@raw/pig</item>
         <item>@raw/elephant</item>
         <item>OTHER</item>
