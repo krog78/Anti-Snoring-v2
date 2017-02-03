@@ -3,19 +3,16 @@
 
     <item
         android:id="@+id/sensibilite"
-        android:icon="@drawable/sensibilite"
         android:title="@string/sensibilite"
         />
        
     <item
         android:id="@+id/changer_son"
-        android:icon="@drawable/notes"
         android:title="@string/changer_son"
         />
 
     <item
         android:id="@+id/quitter"
-        android:icon="@drawable/notes"
         android:title="@string/quitter"
         />
 

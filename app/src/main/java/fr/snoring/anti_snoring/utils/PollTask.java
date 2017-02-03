@@ -16,16 +16,17 @@ import java.io.IOException;
 import fr.snoring.anti_snoring.R;
 import fr.snoring.anti_snoring.activity.AntiSnoringActivity;
 import fr.snoring.anti_snoring.sound.AudioPlayer;
-import fr.snoring.anti_snoring.sound.SoundFile;
-import fr.snoring.anti_snoring.sound.SoundMeter;
+import fr.snoring.anti_snoring.sound.AudioRecorder;
 import fr.snoring.anti_snoring.view.SoundLevelView;
 
 public class PollTask {
 
+    private static final String NO_RECORD_FILE = "/dev/null";
+
     /* constants */
     private static final int POLL_INTERVAL = 500;
 
-    private final SoundMeter soundMeter;
+    private final AudioRecorder audioRecorder;
 
     /**
      * running state
@@ -55,12 +56,12 @@ public class PollTask {
      */
     private boolean testing = false;
 
-    public PollTask(Activity activity, SoundFile soundFile) throws IllegalStateException, IOException {
+    public PollTask(Activity activity, AudioPlayer audioPlayer, AudioRecorder audioRecorder) throws IllegalStateException, IOException {
         super();
         readPollPreferences(activity);
         this.mHandler = new Handler();
         this.activity = activity;
-        this.soundMeter = new SoundMeter();
+        this.audioRecorder = audioRecorder;
         v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
         audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
 
@@ -68,18 +69,17 @@ public class PollTask {
         activity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         // Init audio player
-        audioPlayer = new AudioPlayer();
-        audioPlayer.init(soundFile, activity);
+        this.audioPlayer = audioPlayer;
         soundLevelView = (SoundLevelView) activity.findViewById(R.id.volume);
 
         soundLevelView.setLevel(0, mThreshold);
-        start();
+        start(NO_RECORD_FILE);
 
     }
 
     private Runnable mPollTask = new Runnable() {
         public void run() {
-            double amp = soundMeter.getAmplitude();
+            double amp = audioRecorder.getAmplitude();
             updateDisplay(amp);
 
             // Get the current volume
@@ -126,10 +126,14 @@ public class PollTask {
         }
     };
 
-    private void start() {
+    public void start(String recordFile) {
         mHitCount = 0;
-        soundMeter.start();
+        audioRecorder.start(recordFile);
         mHandler.postDelayed(mPollTask, POLL_INTERVAL);
+    }
+
+    public void start() {
+        start(NO_RECORD_FILE);
     }
 
     private void updateDisplay(double signalEMA) {
@@ -167,14 +171,8 @@ public class PollTask {
         mThreshold = value;
     }
 
-    public AudioPlayer getAudioPlayer() {
-        return audioPlayer;
-    }
-
     public void release() {
         mHandler.removeCallbacks(mPollTask);
-        audioPlayer.release();
-        soundMeter.release();
     }
 
     private void startAudioPlayer() {

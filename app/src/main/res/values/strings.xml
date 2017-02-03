@@ -19,8 +19,11 @@
         <item>OTHER</item>
     </string-array>
     <string name="changer_son">Change sound</string>
+    <string name="play">Play</string>
     <string name="quitter">Exit</string>
+    <string name="record">Record</string>
     <string name="reglage_sensibilite">Sensitivity</string>
-    <string name="select_audio">Select audio file</string>   
+    <string name="select_audio">Select audio file</string>
+    <string name="stop">Stop</string>
     <string name="vibrate">Vibrate</string>
 </resources>

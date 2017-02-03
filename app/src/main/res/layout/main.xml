@@ -1,44 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/moon"
-    android:orientation="vertical" 
+    android:orientation="vertical"
     android:padding="10dp"
+    android:stretchColumns="*"
     android:weightSum="1">
-    
-    <fr.snoring.anti_snoring.view.SoundLevelView
-        android:id="@+id/volume"
-        android:layout_width="230sp"
-        android:layout_height="43sp"
-        android:layout_gravity="center_horizontal|top"
-         />
 
-    <TextView
-        android:id="@+id/son_selectionne"
-        android:layout_width="wrap_content"
+    <TableRow>
+
+        <fr.snoring.anti_snoring.view.SoundLevelView
+            android:id="@+id/volume"
+            android:layout_width="230sp"
+            android:layout_height="43sp"
+            android:layout_gravity="center_horizontal|top" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:id="@+id/son_selectionne"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:gravity="center"
+            android:text=""
+            android:textSize="25sp"
+            android:textStyle="bold" />
+    </TableRow>
+
+    <TableRow>
+
+        <ImageView
+            android:id="@+id/img_vibrate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/vibrate" />
+    </TableRow>
+
+    <TableRow>
+
+        <ImageView
+            android:id="@+id/sleeping"
+            android:layout_width="147dp"
+            android:layout_height="147dp"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_weight="0.08"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/sleeping"
+            android:visibility="visible" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|top"
-        android:text=""
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:gravity="center" />
-    
-    <ImageView android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/img_vibrate"
-        android:contentDescription="@string/vibrate"/>
+        android:gravity="center_horizontal"
+        android:paddingTop="80dp">
 
-    <ImageView
-        android:id="@+id/sleeping"
-        android:layout_width="147dp"
-        android:layout_height="147dp"
-        android:layout_gravity="center_horizontal|top"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/sleeping"
-        android:visibility="visible"
-        android:layout_weight="0.08"
-        android:adjustViewBounds="false" />
+        <TableLayout tools:ignore="UselessParent">
 
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                tools:ignore="UselessParent">
+
+                <ImageView
+                    android:id="@+id/record"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:contentDescription="@string/record"
+                    android:gravity="center_horizontal"
+                    android:src="@drawable/record"
+                    android:clickable="true"/>
+
+                <ImageView
+                    android:id="@+id/play"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:contentDescription="@string/play"
+                    android:gravity="center_horizontal"
+                    android:src="@drawable/play"
+                    android:clickable="true"/>
+
+                <ImageView
+                    android:id="@+id/stop"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:contentDescription="@string/stop"
+                    android:gravity="center_horizontal"
+                    android:src="@drawable/stop"
+                    android:clickable="true"/>
+            </TableRow>
+        </TableLayout>
+    </TableRow>
 </TableLayout>

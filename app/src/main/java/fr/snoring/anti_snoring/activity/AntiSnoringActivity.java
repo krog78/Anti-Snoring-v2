@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +33,9 @@ import java.io.IOException;
 
 import fr.snoring.anti_snoring.R;
 import fr.snoring.anti_snoring.activity.preferences.SoundPreference;
+import fr.snoring.anti_snoring.sound.AudioPlayer;
+import fr.snoring.anti_snoring.sound.AudioRecorder;
+import fr.snoring.anti_snoring.sound.Magneto;
 import fr.snoring.anti_snoring.sound.SoundFile;
 import fr.snoring.anti_snoring.utils.FileUtils;
 import fr.snoring.anti_snoring.utils.PollTask;
@@ -51,6 +53,9 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
     private SoundPreference soundPreference;
 
     private PollTask pollTask;
+
+    private AudioPlayer audioPlayer;
+    private AudioRecorder audioRecorder;
 
     private boolean permissionToRecordAccepted = false;
     private boolean permissionToWriteAccepted = false;
@@ -119,13 +124,18 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
         soundPreference.loadDefaultSounds(getResources());
 
         soundPreference.updateSoundText(this);
+        audioRecorder = new AudioRecorder();
+        audioPlayer = new AudioPlayer();
 
         // Init Poll Task
         try {
-            pollTask = new PollTask(this, soundPreference.getCurrentSound());
+            pollTask = new PollTask(this, audioPlayer, audioRecorder);
         } catch (IllegalStateException | IOException e) {
             throw new RuntimeException(e);
         }
+
+        // Initialize the recording / player buttons
+        new Magneto(this, audioPlayer, pollTask, soundPreference);
     }
 
     @Override
@@ -172,7 +182,7 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
                             SoundFile selectedSound = soundPreference.getDefaultSounds().get(item);
                             soundPreference.savePreference(AntiSnoringActivity.this, selectedSound);
                             if (pollTask != null) {
-                                pollTask.getAudioPlayer().changerSon(AntiSnoringActivity.this,
+                                audioPlayer.changerSon(AntiSnoringActivity.this,
                                         sonsFichier.getResourceId(item, 0));
                             }
                             dialog.dismiss();
@@ -195,6 +205,8 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        audioPlayer.release();
+        audioRecorder.release();
         if (pollTask != null) {
             pollTask.release();
         }
@@ -245,8 +257,8 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
                     String prefSon = uri.toString();
                     soundPreference.savePreference(AntiSnoringActivity.this, new SoundFile(fileName, -1, prefSon));
                     if (pollTask != null) {
-                        pollTask.getAudioPlayer().release();
-                        pollTask.getAudioPlayer().create(this, uri.toString());
+                        audioPlayer.release();
+                        audioPlayer.create(this, uri);
                     }
                 }
 

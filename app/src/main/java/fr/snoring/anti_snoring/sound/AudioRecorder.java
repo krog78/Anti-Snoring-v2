@@ -20,33 +20,34 @@ import android.media.MediaRecorder;
 
 import java.io.IOException;
 
-public class SoundMeter {
-	private MediaRecorder mRecorder;
+public class AudioRecorder {
+    private MediaRecorder mRecorder;
 	private boolean started = false;
 
-	public SoundMeter() {
-		super();
+    public AudioRecorder() {
+        super();
 		mRecorder = new MediaRecorder();
 	}
 
-	public void start() {
-		if (!started) {
-			try {
-				mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-				mRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-				mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-				mRecorder.setOutputFile("/dev/null");
-				mRecorder.prepare();
-				mRecorder.start();
-				started = true;
-			} catch (IllegalStateException | IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
+    public void start(String recordFilePath) {
+        release();
+		mRecorder = new MediaRecorder();
+        try {
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+            mRecorder.setOutputFile(recordFilePath);
+            mRecorder.prepare();
+            mRecorder.start();
+            started = true;
+        } catch (IllegalStateException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
 	}
 
-	private void stop() {
-		if (started) {
+    private void reset() {
+        if (started) {
 			mRecorder.stop();
 			mRecorder.reset();
 			started = false;
@@ -54,7 +55,7 @@ public class SoundMeter {
 	}
 
 	public void release() {
-		stop();
+		reset();
 		mRecorder.release();
 	}
 

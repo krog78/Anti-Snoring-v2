@@ -7,9 +7,11 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
+import java.io.File;
 import java.io.IOException;
 
 import fr.snoring.anti_snoring.utils.FileUtils;
+import fr.snoring.anti_snoring.utils.Logger;
 
 public class AudioPlayer {
 
@@ -18,33 +20,56 @@ public class AudioPlayer {
 	private State t;
 
 	private enum State {
-		INITIALIZED, STARTED, PAUSED, RELEASED
+		INITIALIZED, STARTED, PAUSED, STOPPED, RESET, RELEASED
 	}
 
-	public void create(Context ctx, String urlFichierSon) {
+	public AudioPlayer() {
 		mp = new MediaPlayer();
 		mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+	}
+
+	void create(Context ctx, SoundFile soundFile) {
+		// Creation et initialisation de l'audioplayer
+		if (!soundFile.isAResource()) { // Une preference de fichier
+			// externe existe
+			create(ctx, soundFile);
+		} else { // Internal sound used
+			create(ctx, soundFile.getResourceId());
+		}
+	}
+
+    void create(Context ctx, File soundFile) {
+        reset();
+        try {
+            // Gets the real path on the storage
+            mp.setDataSource(ctx, Uri.fromFile(soundFile));
+        } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
+            Logger.error("Unable to set the data source" + e.getMessage());
+        }
+        mp.prepareAsync();
+        t = State.INITIALIZED;
+    }
+
+	public void create(Context ctx, Uri soundFileUri) {
+		reset();
 		try {
 			// Gets the real path on the storage
-			Uri realStoragePath = Uri.parse(FileUtils.getPath(ctx, Uri.parse(urlFichierSon)));
-			mp.setDataSource(ctx, realStoragePath);
+			mp.setDataSource(ctx, soundFileUri);
 		} catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
-			throw new RuntimeException(e);
+			Logger.error("Unable to set the data source" + e.getMessage());
 		}
 		mp.prepareAsync();
 		t = State.INITIALIZED;
 	}
 
 	private void create(Context ctx, int resid) {
-		mp = new MediaPlayer();
-		mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		AssetFileDescriptor afd = ctx.getResources().openRawResourceFd(resid);
 		if (afd == null)
 			return;
 		try {
 			mp.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
 		} catch (IllegalArgumentException | IllegalStateException | IOException e) {
-			throw new RuntimeException(e);
+			Logger.error("Unable to set the data source" + e.getMessage());
 		}
 		mp.prepareAsync();
 		try {
@@ -61,8 +86,13 @@ public class AudioPlayer {
 	}
 
 	public void play() {
-		mp.start();
-		t = State.STARTED;
+		mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+			@Override
+			public void onPrepared(MediaPlayer mediaPlayer) {
+				mp.start();
+				t = State.STARTED;
+			}
+		});
 	}
 
 	public void pause() {
@@ -72,6 +102,13 @@ public class AudioPlayer {
 		t = State.PAUSED;
 	}
 
+	public void stop() {
+		if (t == State.STARTED) {
+			mp.stop();
+		}
+		t = State.STOPPED;
+	}
+
 	public void release() {
 		if (mp != null) {
 			mp.release();
@@ -79,14 +116,11 @@ public class AudioPlayer {
 		t = State.RELEASED;
 	}
 
-	public void init(SoundFile soundFile, Context ctx) {
-		// Creation et initialisation de l'audioplayer
-		if (!soundFile.isAResource()) { // Une preference de fichier
-										// externe existe
-			create(ctx, soundFile.getUrl());
-		} else { // Internal sound used
-			create(ctx, soundFile.getResourceId());
-		}
-	}
+	void reset() {
+		if (mp != null) {
 
+            mp.reset();
+		}
+		t = State.RESET;
+	}
 }
