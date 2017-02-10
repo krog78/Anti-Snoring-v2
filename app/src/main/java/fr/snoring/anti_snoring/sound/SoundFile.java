@@ -6,11 +6,7 @@ package fr.snoring.anti_snoring.sound;
  */
 public class SoundFile {
 
-	/**
-	 * This sound is based on a URL and is not a resource inside the raw dir of
-	 * this project
-	 */
-	public static final int ID_IS_NOT_A_RESOURCE = -1;
+    public static final int RESOURCE_ID_EXT_FILE = -1;
 
 	/**
 	 * The name of the file as it will be printed
@@ -24,16 +20,19 @@ public class SoundFile {
 
 	private final String url;
 
-	public SoundFile(String filename, int resourceId, String url) {
-		super();
-		if (resourceId == ID_IS_NOT_A_RESOURCE && (url == null || url.isEmpty())) {
-			// Bad formatted sound
-			throw new IllegalArgumentException("Either the resourceId or the url should be defined.");
-		}
-		this.filename = filename;
-		this.resourceId = resourceId;
-		this.url = url;
+    public SoundFile(String filename, String url) {
+        super();
+        this.resourceId = RESOURCE_ID_EXT_FILE;
+        this.filename = filename;
+        this.url = url;
 	}
+
+    public SoundFile(String filename, int resourceId) {
+        super();
+        this.filename = filename;
+        this.resourceId = resourceId;
+        this.url = null;
+    }
 
 	public String getFilename() {
 		return filename;
@@ -48,7 +47,6 @@ public class SoundFile {
 	}
 
 	final boolean isAResource() {
-		return !(getResourceId() == ID_IS_NOT_A_RESOURCE);
-
+		return resourceId != RESOURCE_ID_EXT_FILE;
 	}
 }

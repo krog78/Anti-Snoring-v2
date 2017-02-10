@@ -151,16 +151,12 @@ public class PollTask {
     }
 
     private void readPollPreferences(Activity activity) {
-        int mPollDelay;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
         mThreshold = prefs.getInt("threshold", 3);
-        Log.i(AntiSnoringActivity.TAG, "threshold=" + mThreshold);
-        mPollDelay = Integer.parseInt(prefs.getString("sleep", "5"));
-        Log.i(AntiSnoringActivity.TAG, "sleep=" + mPollDelay);
     }
 
     public final void changeThreshold(Activity activity, int threshold) {
-        int value = threshold / 10;
+        int value = threshold / 10 + 1;
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
         prefs.edit().putInt("threshold", value).apply();

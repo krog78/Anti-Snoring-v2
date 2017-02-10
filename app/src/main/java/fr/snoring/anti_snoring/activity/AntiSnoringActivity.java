@@ -11,8 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,7 +31,7 @@ import com.qxxmucxymh.hathpsneoi122008.Main;
 import java.io.IOException;
 
 import fr.snoring.anti_snoring.R;
-import fr.snoring.anti_snoring.activity.preferences.SoundPreference;
+import fr.snoring.anti_snoring.preferences.SoundPreference;
 import fr.snoring.anti_snoring.sound.SoundFile;
 import fr.snoring.anti_snoring.utils.FileUtils;
 import fr.snoring.anti_snoring.utils.PollTask;
@@ -72,7 +70,6 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate");
 
         // AIRPUSH BEGIN
         AdConfig.setAppId(79190); // setting appid.
@@ -113,16 +110,11 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
 
     private void initPollTask() {
 
-        soundPreference = new SoundPreference(AntiSnoringActivity.this);
-
-        // Load the default sounds
-        soundPreference.loadDefaultSounds(getResources());
-
-        soundPreference.updateSoundText(this);
+        soundPreference = new SoundPreference(this);
 
         // Init Poll Task
         try {
-            pollTask = new PollTask(this, soundPreference.getCurrentSound());
+            pollTask = new PollTask(this, soundPreference.getPreference());
         } catch (IllegalStateException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -156,11 +148,13 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.choix_son);
-                builder.setItems(R.array.sons_liste, new DialogInterface.OnClickListener() {
+                builder.setItems(R.array.sounds_texts, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        TypedArray sonsFichier = getResources().obtainTypedArray(R.array.sons_fichier);
+                        TypedArray soundIds = getResources().obtainTypedArray(R.array.sounds_ids);
+                        String selectedSoundName = soundIds.getText(item).toString();
+                        int selectedSoundId = soundIds.getResourceId(item, 0);
                         // External file selected
-                        if (sonsFichier.getText(item).toString().equals("OTHER")) {
+                        if (selectedSoundName.equals("OTHER")) {
                             // Select a recording
                             Intent i = new Intent();
                             i.setAction(Intent.ACTION_GET_CONTENT);
@@ -169,20 +163,25 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
                                     CHOIX_FICHIER_AUDIO);
 
                         } else { // Internal file selected
-                            SoundFile selectedSound = soundPreference.getDefaultSounds().get(item);
-                            soundPreference.savePreference(AntiSnoringActivity.this, selectedSound);
+                            SoundFile selectedSound = soundPreference.getInternalSounds().get(selectedSoundId);
+                            soundPreference.savePreference(selectedSound);
                             if (pollTask != null) {
                                 pollTask.getAudioPlayer().changerSon(AntiSnoringActivity.this,
-                                        sonsFichier.getResourceId(item, 0));
+                                        selectedSoundId);
                             }
                             dialog.dismiss();
                         }
-                        sonsFichier.recycle();
+                        soundIds.recycle();
 
                     }
                 });
                 AlertDialog alert = builder.create();
                 alert.show();
+                return true;
+            case R.id.confidentiality_rules:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://theslygecompany.wordpress.com/2017/02/07/antisnoring-confidentiaty-rules/"));
+                startActivity(browserIntent);
                 return true;
             case R.id.quitter:
                 onBackPressed();
@@ -243,7 +242,7 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
                     Uri uri = sonReturnedIntent.getData();
                     String fileName = FileUtils.getFilename(this, uri);
                     String prefSon = uri.toString();
-                    soundPreference.savePreference(AntiSnoringActivity.this, new SoundFile(fileName, -1, prefSon));
+                    soundPreference.savePreference(new SoundFile(fileName, prefSon));
                     if (pollTask != null) {
                         pollTask.getAudioPlayer().release();
                         pollTask.getAudioPlayer().create(this, uri.toString());
