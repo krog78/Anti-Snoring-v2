@@ -38,10 +38,8 @@ import fr.snoring.anti_snoring.utils.PollTask;
 
 public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, AdListener {
 
-    public static String TAG = "anti-snoring";
-
     private static final int CHOIX_FICHIER_AUDIO = 100;
-
+    public static String TAG = "anti-snoring";
     private Main main; // Declare here
 
     private MenuInflater menuInflater;
@@ -334,10 +332,10 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
             case 200:
                 permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                 permissionToWriteAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                initPollTask();
                 break;
         }
         if (!permissionToRecordAccepted) AntiSnoringActivity.super.finish();
         if (!permissionToWriteAccepted) AntiSnoringActivity.super.finish();
-        initPollTask();
     }
 }
