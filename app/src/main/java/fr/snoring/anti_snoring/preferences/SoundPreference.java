@@ -41,7 +41,7 @@ public class SoundPreference {
         String soundName = preferences.getString(Fields.SOUND_NAME.name(), "");
         String soundUrl = preferences.getString(Fields.SOUND_URL.name(), "");
         int soundId = preferences.getInt(Fields.RESOURCE_ID.name(), 0);
-        if (soundId == SoundFile.RESOURCE_ID_EXT_FILE) {
+        if (soundId == SoundFile.RESOURCE_ID_EXT_FILE && !soundUrl.isEmpty()) {
             prefSoundFile = new SoundFile(soundName, soundUrl);
         } else {
             prefSoundFile = internalSounds.get(soundId, defaultSound);

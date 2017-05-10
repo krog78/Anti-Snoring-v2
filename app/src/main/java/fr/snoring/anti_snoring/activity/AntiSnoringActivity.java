@@ -18,10 +18,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.qxxmucxymh.hathpsneoi122008.AdConfig;
 import com.qxxmucxymh.hathpsneoi122008.AdConfig.AdType;
 import com.qxxmucxymh.hathpsneoi122008.AdListener;
@@ -39,7 +35,6 @@ import fr.snoring.anti_snoring.utils.PollTask;
 public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, AdListener {
 
     private static final int CHOIX_FICHIER_AUDIO = 100;
-    public static String TAG = "anti-snoring";
     private Main main; // Declare here
 
     private MenuInflater menuInflater;
@@ -51,11 +46,6 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
     private boolean permissionToRecordAccepted = false;
     private boolean permissionToWriteAccepted = false;
     private String[] permissions = {"android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE"};
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     /**
      * Called when the activity is first created.
@@ -89,10 +79,6 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
 
         menuInflater = getMenuInflater();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
         // AIRPUSH BEGIN
         // Initialize Airpush
@@ -287,42 +273,6 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
     @Override
     public void onAdClicked() {
         //This will get called when ad is clicked.
-    }
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("AntiSnoring Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
     }
 
     @Override
