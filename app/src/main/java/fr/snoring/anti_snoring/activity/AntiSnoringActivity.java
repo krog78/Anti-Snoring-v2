@@ -1,5 +1,6 @@
 package fr.snoring.anti_snoring.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -72,7 +74,14 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
         // Ask the user authorization to record sound
         int requestCode = 200;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(permissions, requestCode);
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
+                    || ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(permissions, requestCode);
+            }else{
+                initPollTask();
+            }
         } else {
             initPollTask();
         }
@@ -282,10 +291,14 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
             case 200:
                 permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                 permissionToWriteAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-                initPollTask();
                 break;
         }
-        if (!permissionToRecordAccepted) AntiSnoringActivity.super.finish();
-        if (!permissionToWriteAccepted) AntiSnoringActivity.super.finish();
+        if (!permissionToRecordAccepted) {
+            AntiSnoringActivity.super.finish();
+        } else if (!permissionToWriteAccepted) {
+            AntiSnoringActivity.super.finish();
+        } else {
+            initPollTask();
+        }
     }
 }
