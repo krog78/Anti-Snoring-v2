@@ -34,8 +34,8 @@ public class SoundMeter {
 			try {
 				mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 				mRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-				mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
 				mRecorder.setOutputFile("/dev/null");
+				mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
 				mRecorder.prepare();
 				mRecorder.start();
 				started = true;
