@@ -9,12 +9,12 @@
         android:layout_width="42dp"
         android:layout_height="match_parent"
         android:background="@android:color/black"
-        android:contentDescription=""
+        android:contentDescription="@string/micro"
         android:src="@drawable/micro" />
 
     <SeekBar
         android:id="@+id/seekbar"
-        android:layout_width="316dp"
+        android:layout_width="308dp"
         android:layout_height="match_parent"
         android:minWidth="300dp" />
 
@@ -23,5 +23,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:drawable="@color/common_google_signin_btn_text_dark"
+        android:contentDescription="@string/cross"
         android:src="@drawable/cross" />
 </LinearLayout>

@@ -20,6 +20,8 @@
     </string-array>
     <string name="changer_son">Change sound</string>
     <string name="confidentiality_rules">Confidentiality rules</string>
+    <string name="cross">Close</string>
+    <string name="micro">Micro</string>
     <string name="ok">OK</string>
     <string name="quitter">Exit</string>
     <string name="reglage_sensibilite">Sensitivity</string>
