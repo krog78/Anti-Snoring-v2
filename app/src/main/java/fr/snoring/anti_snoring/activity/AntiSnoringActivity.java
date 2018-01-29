@@ -140,12 +140,12 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
                 final Dialog dialog = new Dialog(this);
                 dialog.setContentView(R.layout.layout_seekbar);
                 dialog.setTitle(R.string.reglage_sensibilite);
-                SeekBar seek = (SeekBar) dialog.findViewById(R.id.seekbar);
+                SeekBar seek = dialog.findViewById(R.id.seekbar);
                 if (pollTask != null) {
                     seek.setProgress(pollTask.getmThreshold() * 10);
                 }
                 seek.setOnSeekBarChangeListener(this);
-                ImageView close = (ImageView) dialog.findViewById(R.id.cross);
+                ImageView close = dialog.findViewById(R.id.cross);
                 close.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -233,12 +233,11 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
     @Override
     public void onStartTrackingTouch(SeekBar arg0) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar arg0) {
-        LinearLayout v = (LinearLayout) findViewById(R.id.main);
+        LinearLayout v = findViewById(R.id.main);
         v.removeView(arg0);
     }
 
@@ -250,12 +249,14 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
             case CHOIX_FICHIER_AUDIO:
                 if (resultCode == RESULT_OK) {
                     Uri uri = sonReturnedIntent.getData();
-                    String fileName = FileUtils.getFilename(this, uri);
-                    String prefSon = uri.toString();
-                    soundPreference.savePreference(new SoundFile(fileName, prefSon));
-                    if (pollTask != null) {
-                        pollTask.getAudioPlayer().release();
-                        pollTask.getAudioPlayer().create(this, uri.toString());
+                    if(uri != null) {
+                        String fileName = FileUtils.getFilename(this, uri);
+                        String prefSon = uri.toString();
+                        soundPreference.savePreference(new SoundFile(fileName, prefSon));
+                        if (pollTask != null) {
+                            pollTask.getAudioPlayer().release();
+                            pollTask.getAudioPlayer().create(this, uri.toString());
+                        }
                     }
                 }
 
