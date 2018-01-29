@@ -1,13 +1,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linear_layout_seek"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:padding="10dp" >
+    android:id="@+id/layout_seekbar"
+    android:layout_width="wrap_content"
+    android:layout_height="40dp"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/micro"
+        android:layout_width="42dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:contentDescription=""
+        android:src="@drawable/micro" />
 
     <SeekBar
         android:id="@+id/seekbar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:minWidth="300dp"/>
+        android:layout_width="316dp"
+        android:layout_height="match_parent"
+        android:minWidth="300dp" />
 
+    <ImageView
+        android:id="@+id/cross"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:drawable="@color/common_google_signin_btn_text_dark"
+        android:src="@drawable/cross" />
 </LinearLayout>

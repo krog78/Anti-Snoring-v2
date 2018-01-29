@@ -24,19 +24,16 @@ public class SoundMeter {
 	private MediaRecorder mRecorder;
 	private boolean started = false;
 
-	public SoundMeter() {
-		super();
-		mRecorder = new MediaRecorder();
-	}
-
 	public void start() {
 		if (!started) {
 			try {
-				mRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+                mRecorder = new MediaRecorder();
+                mRecorder.reset();
+                mRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
 				mRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
 				mRecorder.setOutputFile("/dev/null");
 				mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-				mRecorder.prepare();
+                mRecorder.prepare();
 				mRecorder.start();
 				started = true;
 			} catch (IllegalStateException | IOException e) {

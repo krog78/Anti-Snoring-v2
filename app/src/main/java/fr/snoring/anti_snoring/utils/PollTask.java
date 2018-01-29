@@ -73,8 +73,9 @@ public class PollTask {
         soundLevelView = (SoundLevelView) activity.findViewById(R.id.volume);
 
         soundLevelView.setLevel(0, mThreshold);
-        start();
-
+        mHitCount = 0;
+        soundMeter.start();
+        mHandler.postDelayed(mPollTask, POLL_INTERVAL);
     }
 
     private Runnable mPollTask = new Runnable() {
@@ -125,12 +126,6 @@ public class PollTask {
             mHandler.postDelayed(mPollTask, POLL_INTERVAL);
         }
     };
-
-    private void start() {
-        mHitCount = 0;
-        soundMeter.start();
-        mHandler.postDelayed(mPollTask, POLL_INTERVAL);
-    }
 
     private void updateDisplay(double signalEMA) {
         soundLevelView.setLevel((int) signalEMA, mThreshold);

@@ -25,11 +25,6 @@
         android:textStyle="bold"
         android:gravity="center" />
     
-    <ImageView android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/img_vibrate"
-        android:contentDescription="@string/vibrate"/>
-
     <ImageView
         android:id="@+id/sleeping"
         android:layout_width="147dp"

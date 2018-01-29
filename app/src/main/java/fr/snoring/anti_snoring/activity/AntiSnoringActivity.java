@@ -16,9 +16,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.qxxmucxymh.hathpsneoi122008.AdConfig;
 import com.qxxmucxymh.hathpsneoi122008.AdConfig.AdType;
@@ -70,6 +74,13 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
         // AIRPUSH END
 
         setContentView(R.layout.main);
+
+        // Verify that the device has a mic first
+        PackageManager pmanager = this.getPackageManager();
+        if (!pmanager.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
+            Toast.makeText(this, "This device doesn't have a mic!", Toast.LENGTH_LONG).show();
+            finish();
+        }
 
         // Ask the user authorization to record sound
         int requestCode = 200;
@@ -126,7 +137,7 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
         switch (item.getItemId()) {
             case R.id.sensibilite:
 
-                Dialog dialog = new Dialog(this);
+                final Dialog dialog = new Dialog(this);
                 dialog.setContentView(R.layout.layout_seekbar);
                 dialog.setTitle(R.string.reglage_sensibilite);
                 SeekBar seek = (SeekBar) dialog.findViewById(R.id.seekbar);
@@ -134,7 +145,13 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
                     seek.setProgress(pollTask.getmThreshold() * 10);
                 }
                 seek.setOnSeekBarChangeListener(this);
-
+                ImageView close = (ImageView) dialog.findViewById(R.id.cross);
+                close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.hide();
+                    }
+                });
                 dialog.show();
                 return true;
             case R.id.changer_son:
@@ -200,10 +217,10 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
         } catch (Exception e) {
             super.onBackPressed();
         }
-        super.onBackPressed();
         if (pollTask != null) {
             pollTask.release();
         }
+        super.onBackPressed();
     }
 
     @Override
@@ -300,5 +317,20 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
         } else {
             initPollTask();
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 }

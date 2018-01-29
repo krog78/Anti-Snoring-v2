@@ -8,8 +8,8 @@ android {
         minSdkVersion 19
         multiDexEnabled true
         targetSdkVersion 27
-        versionCode 31
-        versionName "1.29"
+        versionCode 32
+        versionName "1.30"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -41,6 +41,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     // Required -- JUnit 4 framework
     testCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestCompile 'com.android.support.test:runner:1.0.1'
     compile 'com.google.firebase:firebase-appindexing:11.8.0'
     compile 'com.android.support:multidex:1.0.2'
 
