@@ -13,10 +13,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -41,6 +43,8 @@ import fr.snoring.anti_snoring.utils.PollTask;
 public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, AdListener {
 
     private static final int CHOIX_FICHIER_AUDIO = 100;
+    // Used to Log
+    private static final String TAG = "AntiSnoringActivity";
     private Main main; // Declare here
 
     private MenuInflater menuInflater;
@@ -64,7 +68,10 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initApp();
+    }
 
+    private void initApp(){
         // AIRPUSH BEGIN
         AdConfig.setAppId(79190); // setting appid.
         AdConfig.setApiKey("1351602905122008414"); // setting apikey
@@ -140,6 +147,10 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
                 final Dialog dialog = new Dialog(this);
                 dialog.setContentView(R.layout.layout_seekbar);
                 dialog.setTitle(R.string.reglage_sensibilite);
+                Window window = dialog.getWindow();
+                if(window != null) {
+                    window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                }
                 SeekBar seek = dialog.findViewById(R.id.seekbar);
                 if (pollTask != null) {
                     seek.setProgress(pollTask.getmThreshold() * 10);
@@ -201,27 +212,7 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (pollTask != null) {
-            pollTask.release();
-        }
-    }
 
-    @Override
-    public void onBackPressed() {
-        try {
-            //Show the cached SmartWall Ad
-            main.showCachedAd(AdType.smartwall, this);
-        } catch (Exception e) {
-            super.onBackPressed();
-        }
-        if (pollTask != null) {
-            pollTask.release();
-        }
-        super.onBackPressed();
-    }
 
     @Override
     public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
@@ -259,7 +250,6 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
                         }
                     }
                 }
-
         }
     }
 
@@ -320,18 +310,47 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
         }
     }
 
+    private void closeApplication(){
+        if (pollTask != null) {
+            pollTask.release();
+        }
+        try {
+            //Show the cached SmartWall Ad
+            main.showCachedAd(AdType.smartwall, this);
+        } catch (Exception e) {
+            Log.e(TAG,"Unable to start Airpush SmartWall");
+        }
+    }
+
     @Override
     protected void onRestart() {
         super.onRestart();
+        closeApplication();
+        initApp();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        closeApplication();
+        initApp();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        closeApplication();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        closeApplication();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        closeApplication();
     }
 }

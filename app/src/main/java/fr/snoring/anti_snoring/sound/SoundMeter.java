@@ -44,8 +44,6 @@ public class SoundMeter {
 
 	private void stop() {
 		if (started) {
-			mRecorder.stop();
-			mRecorder.reset();
 			started = false;
 		}
 	}
