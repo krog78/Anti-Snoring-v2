@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Handler;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
@@ -25,7 +26,7 @@ public class PollTask {
     /* constants */
     private static final int POLL_INTERVAL = 500;
 
-    private final SoundMeter soundMeter;
+    private SoundMeter soundMeter;
 
     /**
      * running state
@@ -38,101 +39,100 @@ public class PollTask {
      **/
     private int mThreshold;
 
-    private final Activity activity;
-
-    private final Handler mHandler;
-    private final SoundLevelView soundLevelView;
+    private Handler mHandler;
+    private SoundLevelView soundLevelView;
 
     // Get instance of Vibrator from current Context
-    private final Vibrator v;
+    private Vibrator v;
 
-    private final AudioPlayer audioPlayer;
+    private AudioPlayer audioPlayer;
 
-    private final AudioManager audioManager;
+    private AudioManager audioManager;
+
+    private Runnable mPollTask;
 
     /**
      * Set it to true to test this part.
      */
     private boolean testing = false;
+    public PollTask(final Activity activity, final SoundFile soundFile)
+    {
+        if(mPollTask == null) {
+            readPollPreferences(activity);
+            this.mHandler = new Handler();
+            this.soundMeter = new SoundMeter();
+            v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+            audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
 
-    public PollTask(Activity activity, SoundFile soundFile) throws IllegalStateException, IOException {
-        super();
-        readPollPreferences(activity);
-        this.mHandler = new Handler();
-        this.activity = activity;
-        this.soundMeter = new SoundMeter();
-        v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
-        audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
+            // Used to get media volume (and not ringtone volume)
+            activity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-        // Used to get media volume (and not ringtone volume)
-        activity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+            // Init audio player
+            audioPlayer = new AudioPlayer();
+            audioPlayer.init(soundFile, activity);
+            soundLevelView = activity.findViewById(R.id.volume);
 
-        // Init audio player
-        audioPlayer = new AudioPlayer();
-        audioPlayer.init(soundFile, activity);
-        soundLevelView = (SoundLevelView) activity.findViewById(R.id.volume);
+            soundLevelView.setLevel(0, mThreshold);
+            mHitCount = 0;
+            soundMeter.start();
 
-        soundLevelView.setLevel(0, mThreshold);
-        mHitCount = 0;
-        soundMeter.start();
-        mHandler.postDelayed(mPollTask, POLL_INTERVAL);
-    }
+            mPollTask = new Runnable() {
+                public void run() {
+                    double amp = soundMeter.getAmplitude();
+                    updateDisplay(amp);
 
-    private Runnable mPollTask = new Runnable() {
-        public void run() {
-            double amp = soundMeter.getAmplitude();
-            updateDisplay(amp);
+                    // Get the current volume
+                    int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
-            // Get the current volume
-            int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                    // For tests purpose, force the values to enter the if conditions
+                    if (testing) {
+                        amp = mThreshold + 1;
+                        mHitCount = 6;
+                    }
 
-            // For tests purpose, force the values to enter the if conditions
-            if (testing) {
-                amp = mThreshold + 1;
-                mHitCount = 6;
-            }
-
-            if (amp > mThreshold) {
-                mHitCount++;
-                if (mHitCount > 5) {
-                    changeHeadPicture(activity, R.drawable.angry);
-                    if (currentVolume == 0) {
-                        if (v.hasVibrator()) {
-                            v.vibrate(300);
+                    if (amp > mThreshold) {
+                        mHitCount++;
+                        if (mHitCount > 5) {
+                            changeHeadPicture(activity, R.drawable.angry);
+                            if (currentVolume == 0) {
+                                if (v.hasVibrator()) {
+                                    v.vibrate(300);
+                                }
+                            } else {
+                                startAudioPlayer();
+                            }
+                            if (testing) {
+                                // Goes to the else clause next time
+                                mLowCount = 6;
+                                testing = false;
+                            }
+                            mHitCount = 0;
                         }
                     } else {
-                        startAudioPlayer();
+                        mLowCount++;
+                        if (mLowCount > 5) {
+                            changeHeadPicture(activity, R.drawable.sleeping);
+                            mLowCount = 0;
+                            try {
+                                audioPlayer.pause();
+                            } catch (IllegalStateException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                     }
-                    if (testing) {
-                        // Goes to the else clause next time
-                        mLowCount = 6;
-                        testing = false;
-                    }
-                    mHitCount = 0;
+                    mHandler.postDelayed(mPollTask, POLL_INTERVAL);
                 }
-            } else {
-                mLowCount++;
-                if (mLowCount > 5) {
-                    changeHeadPicture(activity, R.drawable.sleeping);
-                    mLowCount = 0;
-                    try {
-                        audioPlayer.pause();
-                    } catch (IllegalStateException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-
+            };
             mHandler.postDelayed(mPollTask, POLL_INTERVAL);
         }
-    };
+    }
 
     private void updateDisplay(double signalEMA) {
         soundLevelView.setLevel((int) signalEMA, mThreshold);
     }
 
     private void changeHeadPicture(final Activity activity, final int id) {
-        final ImageView headView = ((ImageView) activity.findViewById(R.id.sleeping));
+        final ImageView headView = activity.findViewById(R.id.sleeping);
         headView.post(new Runnable() {
             @Override
             public void run() {

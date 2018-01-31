@@ -126,7 +126,7 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
         // Init Poll Task
         try {
             pollTask = new PollTask(this, soundPreference.getPreference());
-        } catch (IllegalStateException | IOException e) {
+        } catch (IllegalStateException e) {
             throw new RuntimeException(e);
         }
     }
@@ -297,8 +297,10 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case 200:
-                permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                permissionToWriteAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                if(grantResults.length >= 2) {
+                    permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    permissionToWriteAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                }
                 break;
         }
         if (!permissionToRecordAccepted) {
