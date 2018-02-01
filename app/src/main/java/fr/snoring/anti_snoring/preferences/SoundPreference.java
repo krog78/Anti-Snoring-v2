@@ -95,7 +95,7 @@ public class SoundPreference {
     }
 
     private void updateSoundText(SoundFile soundFile) {
-        TextView text = (TextView) activity.findViewById(R.id.son_selectionne);
+        TextView text = activity.findViewById(R.id.son_selectionne);
         text.setText(soundFile.getFilename());
     }
 

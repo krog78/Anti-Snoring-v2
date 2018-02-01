@@ -3,14 +3,30 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     buildToolsVersion "26.0.2"
-    defaultConfig {
-        applicationId "fr.snoring.anti_snoring"
-        minSdkVersion 19
-        multiDexEnabled true
-        targetSdkVersion 27
-        versionCode 33
-        versionName "1.31"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    def versionPropsFile = file('version.properties')
+
+    if (versionPropsFile.canRead()) {
+        Properties versionProps = new Properties()
+
+        versionProps.load(new FileInputStream(versionPropsFile))
+
+        def code = versionProps['VERSION_CODE'].toInteger() + 1
+
+        versionProps['VERSION_CODE']=code.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+
+        defaultConfig {
+            applicationId "fr.snoring.anti_snoring"
+            minSdkVersion 19
+            multiDexEnabled true
+            targetSdkVersion 27
+            versionCode code
+            versionName "1." + code
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        }
+    }
+    else {
+        throw new GradleException("Could not read version.properties!")
     }
     buildTypes {
         release {

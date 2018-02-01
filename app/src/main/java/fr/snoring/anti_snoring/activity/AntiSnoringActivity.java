@@ -117,6 +117,12 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
         // for calling Smartwall ad
         main.startInterstitialAd(AdType.smartwall, this);
         // AIRPUSH END
+        try {
+            //Show the cached SmartWall Ad
+            main.showCachedAd(AdType.smartwall, this);
+        } catch (Exception e) {
+            Log.e(TAG,"Unable to start Airpush SmartWall");
+        }
     }
 
     private void initPollTask() {
@@ -205,8 +211,8 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
                 startActivity(browserIntent);
                 return true;
             case R.id.quitter:
-                onBackPressed();
-                return true;
+                releasePollTask();
+                finish();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -312,47 +318,42 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
         }
     }
 
-    private void closeApplication(){
+    private void releasePollTask(){
         if (pollTask != null) {
             pollTask.release();
-        }
-        try {
-            //Show the cached SmartWall Ad
-            main.showCachedAd(AdType.smartwall, this);
-        } catch (Exception e) {
-            Log.e(TAG,"Unable to start Airpush SmartWall");
         }
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        closeApplication();
+        releasePollTask();
         initApp();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        closeApplication();
+        releasePollTask();
         initApp();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        closeApplication();
+        releasePollTask();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        closeApplication();
+        releasePollTask();
+        finish();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        closeApplication();
+        releasePollTask();
     }
 }
