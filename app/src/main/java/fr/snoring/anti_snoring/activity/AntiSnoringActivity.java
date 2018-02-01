@@ -68,27 +68,19 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initApp();
-    }
-
-    private void initApp(){
-        // AIRPUSH BEGIN
-        AdConfig.setAppId(79190); // setting appid.
-        AdConfig.setApiKey("1351602905122008414"); // setting apikey
-        AdConfig.setCachingEnabled(true); // Enabling SmartWall ad caching.
-        AdConfig.setPlacementId(0); // pass the placement id.
-        AdView.setAdListener(this);// Add listener for Inline 360 ads
-        // AIRPUSH END
-
-        setContentView(R.layout.main);
-
         // Verify that the device has a mic first
         PackageManager pmanager = this.getPackageManager();
         if (!pmanager.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
             Toast.makeText(this, "This device doesn't have a mic!", Toast.LENGTH_LONG).show();
             finish();
         }
+        setContentView(R.layout.main);
+        menuInflater = getMenuInflater();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        initAirpush();
+    }
 
+    private void initApp(){
         // Ask the user authorization to record sound
         int requestCode = 200;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -103,9 +95,16 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
         } else {
             initPollTask();
         }
+    }
 
-        menuInflater = getMenuInflater();
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    private void initAirpush(){
+        // AIRPUSH BEGIN
+        AdConfig.setAppId(79190); // setting appid.
+        AdConfig.setApiKey("1351602905122008414"); // setting apikey
+        AdConfig.setCachingEnabled(true); // Enabling SmartWall ad caching.
+        AdConfig.setPlacementId(0); // pass the placement id.
+        AdView.setAdListener(this);// Add listener for Inline 360 ads
+        // AIRPUSH END
 
         // AIRPUSH BEGIN
         // Initialize Airpush
@@ -123,6 +122,7 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
         } catch (Exception e) {
             Log.e(TAG,"Unable to start Airpush SmartWall");
         }
+
     }
 
     private void initPollTask() {
@@ -328,7 +328,6 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
     protected void onRestart() {
         super.onRestart();
         releasePollTask();
-        initApp();
     }
 
     @Override
