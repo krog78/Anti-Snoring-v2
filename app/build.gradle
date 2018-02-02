@@ -30,7 +30,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "fr.snoring.anti_snoring"
+        applicationId "fr.snoring.anti_snoring_v2"
         minSdkVersion 19
         multiDexEnabled true
         targetSdkVersion 27
