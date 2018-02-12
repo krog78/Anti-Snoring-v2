@@ -22,10 +22,9 @@ import java.io.IOException;
 
 public class SoundMeter {
 	private MediaRecorder mRecorder;
-	private boolean started = false;
 
 	public void start() {
-		if (!started) {
+		if (mRecorder == null) {
 			try {
                 mRecorder = new MediaRecorder();
                 mRecorder.reset();
@@ -35,26 +34,19 @@ public class SoundMeter {
 				mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
                 mRecorder.prepare();
 				mRecorder.start();
-				started = true;
 			} catch (IllegalStateException | IOException e) {
-				throw new RuntimeException(e);
+				throw new RuntimeException("MediaRecorder: "+mRecorder, e);
 			}
 		}
 	}
 
-	private void stop() {
-		if (started) {
-			started = false;
-		}
-	}
-
 	public void release() {
-		stop();
 		mRecorder.release();
+		mRecorder = null;
 	}
 
 	public double getAmplitude() {
-		if (mRecorder != null && started) {
+		if (mRecorder != null) {
 			return (mRecorder.getMaxAmplitude() / 2700.0);
 		} else {
 			return 0;

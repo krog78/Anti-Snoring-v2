@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "658864815970",
+    "firebase_url": "https://antisnoring-a492a.firebaseio.com",
+    "project_id": "antisnoring-a492a",
+    "storage_bucket": "antisnoring-a492a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:658864815970:android:52837a9f3f72245f",
+        "android_client_info": {
+          "package_name": "fr.snoring.anti_snoring_v2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "658864815970-15103sqei4n8ucntbpllts654iqo00ib.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUSgvk6Wc6ZuxwTEg3-6jmZyWySYJRRHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

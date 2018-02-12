@@ -344,6 +344,12 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        releasePollTask();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         releasePollTask();
