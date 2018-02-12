@@ -41,8 +41,10 @@ public class SoundMeter {
 	}
 
 	public void release() {
-		mRecorder.release();
-		mRecorder = null;
+		if(mRecorder != null) {
+			mRecorder.release();
+			mRecorder = null;
+		}
 	}
 
 	public double getAmplitude() {
