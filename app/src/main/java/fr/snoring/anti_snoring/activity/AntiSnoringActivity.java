@@ -126,12 +126,15 @@ public class AntiSnoringActivity extends AppCompatActivity implements SeekBar.On
     }
 
     private void initPollTask() {
-
-        soundPreference = new SoundPreference(this);
+        if(soundPreference == null) {
+            soundPreference = new SoundPreference(this);
+        }
 
         // Init Poll Task
         try {
-            pollTask = new PollTask(this, soundPreference.getPreference());
+            if(pollTask == null) {
+                pollTask = new PollTask(this, soundPreference.getPreference());
+            }
         } catch (IllegalStateException e) {
             throw new RuntimeException(e);
         }
