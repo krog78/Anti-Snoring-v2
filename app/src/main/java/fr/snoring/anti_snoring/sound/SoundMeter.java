@@ -16,14 +16,18 @@
 
 package fr.snoring.anti_snoring.sound;
 
+import android.content.Context;
 import android.media.MediaRecorder;
+import android.widget.Toast;
 
 import java.io.IOException;
+
+import fr.snoring.anti_snoring.R;
 
 public class SoundMeter {
 	private MediaRecorder mRecorder;
 
-	public void start() {
+	public void start(Context ctx) {
 		if (mRecorder == null) {
 			try {
                 mRecorder = new MediaRecorder();
@@ -35,7 +39,7 @@ public class SoundMeter {
                 mRecorder.prepare();
 				mRecorder.start();
 			} catch (IllegalStateException | IOException e) {
-				throw new RuntimeException("MediaRecorder: "+mRecorder, e);
+				Toast.makeText(ctx, R.string.unable_to_acquire_microphone, Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

@@ -74,7 +74,7 @@ public class PollTask {
 
             soundLevelView.setLevel(0, mThreshold);
             mHitCount = 0;
-            soundMeter.start();
+            soundMeter.start(activity.getApplicationContext());
 
             mPollTask = new Runnable() {
                 public void run() {
