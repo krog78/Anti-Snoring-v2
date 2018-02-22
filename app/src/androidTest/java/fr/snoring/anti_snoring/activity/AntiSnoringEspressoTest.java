@@ -79,11 +79,13 @@ public class AntiSnoringEspressoTest {
     }
 
     @Test
-    public void changingSensibilityIsOk(){
+    public void changingSensibilityIsOk() throws InterruptedException {
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         mDevice.pressMenu();
+        Thread.sleep(1000);
         onView(withText(R.string.sensibilite))
                 .perform(click());
+        Thread.sleep(1000);
         onView(withId(R.id.seekbar)).perform(setProgress(10));
         onView(withId(R.id.seekbar)).perform(setProgress(50));
         onView(withId(R.id.cross)).perform(click());
@@ -91,17 +93,19 @@ public class AntiSnoringEspressoTest {
 
     @Test
     //TODO Improve this one
-    public void changerSonMenuOptionIsDisplayed(){
+    public void changerSonMenuOptionIsDisplayed() throws InterruptedException {
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         mDevice.pressMenu();
+        Thread.sleep(1000);
         onView(withText(R.string.changer_son))
                 .perform(click());
     }
 
     @Test
-    public void quitterMenuOptionIsDisplayed(){
+    public void quitterMenuOptionIsDisplayed() throws InterruptedException {
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         mDevice.pressMenu();
+        Thread.sleep(1000);
         onView(withText(R.string.quitter))
                 .perform(click());
     }
@@ -124,5 +128,4 @@ public class AntiSnoringEspressoTest {
             }
         };
     }
-
 }
