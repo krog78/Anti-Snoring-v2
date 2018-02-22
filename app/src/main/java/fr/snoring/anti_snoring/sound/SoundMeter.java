@@ -18,6 +18,7 @@ package fr.snoring.anti_snoring.sound;
 
 import android.content.Context;
 import android.media.MediaRecorder;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -39,7 +40,9 @@ public class SoundMeter {
                 mRecorder.prepare();
 				mRecorder.start();
 			} catch (IllegalStateException | IOException e) {
-				Toast.makeText(ctx, R.string.unable_to_acquire_microphone, Toast.LENGTH_SHORT).show();
+				Toast microAlreadyUsedToast = Toast.makeText(ctx, R.string.unable_to_acquire_microphone, Toast.LENGTH_LONG);
+				microAlreadyUsedToast.setGravity(Gravity.CENTER, 0, 0);
+				microAlreadyUsedToast.show();
 			}
 		}
 	}
